@@ -3,6 +3,9 @@
 // Import the http module
 const http = require('http');
 
+// Import the url module
+const url = require('url');
+
 // Define the port to listen on
 const PORT = 8080;
 
