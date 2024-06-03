@@ -16,8 +16,8 @@ Make sure you have Node.js installed on your machine.
    ```bash
    cd movie_api
 3. Install dependencies: 
-       ```bash
-       npm install
+   ```bash
+npm install
 
 
 Usage
