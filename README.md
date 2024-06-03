@@ -15,11 +15,15 @@ Make sure you have Node.js installed on your machine.
 2. Navigate to the project directory:
    ```bash
    cd movie_api
-3. Install dependencies: npm install
+3. Install dependencies: 
+       ```bash
+       npm install
 
 
 Usage
-To start the server, run the following command: node server.js
+To start the server, run the following command: 
+       ```bash
+       node server.js
 
 The server will start listening on port 8080. You can access the API endpoints by visiting http://localhost:8080.
 
