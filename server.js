@@ -51,9 +51,6 @@ http.createServer((request, response) => {
         response.end();
       }
     });
-});
+}).listen(PORT);
 
-// Start the server and listen on the defined port
-server.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
-});
+console.log('Server is running on Port 8080.');
