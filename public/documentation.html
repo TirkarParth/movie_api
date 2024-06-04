@@ -97,61 +97,98 @@
 
     <h2>API Endpoints</h2>
     <table>
-        <tr>
-            <th>Request</th>
-            <th>URL</th>
-            <th>Response</th>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/movies</td>
-            <td>Returns a list of all movies in JSON format</td>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/movies/:title</td>
-            <td>Returns data about a single movie by title</td>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/movies/genre/:genreName</td>
-            <td>Returns data about a genre by name</td>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/movies/director/:directorName</td>
-            <td>Returns data about a director by name</td>
-        </tr>
-        <tr>
-            <td>GET</td>
-            <td>/users</td>
-            <td>Returns a list of all users in JSON format</td>
-        </tr>
-        <tr>
-            <td>POST</td>
-            <td>/users</td>
-            <td>Adds a new user and returns the newly created user object</td>
-        </tr>
-        <tr>
-            <td>POST</td>
-            <td>/users/:username/:movieTitle</td>
-            <td>Adds a movie to a user's list of favorite movies</td>
-        </tr>
-        <tr>
-            <td>PUT</td>
-            <td>/users/:username</td>
-            <td>Updates a user's information</td>
-        </tr>
-        <tr>
-            <td>DELETE</td>
-            <td>/users/:username</td>
-            <td>Deletes a user by username</td>
-        </tr>
-        <tr>
-            <td>DELETE</td>
-            <td>/users/:username/:movieTitle</td>
-            <td>Removes a movie from a user's list of favorite movies</td>
-        </tr>
+        <thead>
+            <tr>
+                <th>Endpoint</th>
+                <th>Method</th>
+                <th>Description</th>
+                <th>Parameters</th>
+                <th>Request Body</th>
+                <th>Response</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>/movies</td>
+                <td>GET</td>
+                <td>Returns data on all movies</td>
+                <td>None</td>
+                <td>None</td>
+                <td>JSON array of movie objects</td>
+            </tr>
+            <tr>
+                <td>/movies/:title</td>
+                <td>GET</td>
+                <td>Returns data on a single movie by title</td>
+                <td>title: string</td>
+                <td>None</td>
+                <td>JSON object of the movie</td>
+            </tr>
+            <tr>
+                <td>/movies/genre/:genreName</td>
+                <td>GET</td>
+                <td>Returns data on a genre by name</td>
+                <td>genreName: string</td>
+                <td>None</td>
+                <td>JSON object of the genre</td>
+            </tr>
+            <tr>
+                <td>/movies/director/:directorName</td>
+                <td>GET</td>
+                <td>Returns data on a director by name</td>
+                <td>directorName: string</td>
+                <td>None</td>
+                <td>JSON object of the director</td>
+            </tr>
+            <tr>
+                <td>/users</td>
+                <td>GET</td>
+                <td>Returns data on all users</td>
+                <td>None</td>
+                <td>None</td>
+                <td>JSON array of user objects</td>
+            </tr>
+            <tr>
+                <td>/users</td>
+                <td>POST</td>
+                <td>Adds a new user</td>
+                <td>None</td>
+                <td>JSON object with user data<br>Example:<br>{ "username": "user1", "email": "user1@example.com", "password": "password123" }</td>
+                <td>JSON object of the created user</td>
+            </tr>
+            <tr>
+                <td>/users/:username/:movieTitle</td>
+                <td>POST</td>
+                <td>Adds a movie to the user's favorite movies list</td>
+                <td>username: string, movieTitle: string</td>
+                <td>None</td>
+                <td>String message</td>
+            </tr>
+            <tr>
+                <td>/users/:username</td>
+                <td>PUT</td>
+                <td>Updates user data</td>
+                <td>username: string</td>
+                <td>JSON object with updated user data<br>Example:<br>{ "username": "newUsername", "email": "newEmail@example.com", "password": "newPassword123" }</td>
+                <td>String message</td>
+            </tr>
+            <tr>
+                <td>/users/:username</td>
+                <td>DELETE</td>
+                <td>Deletes a user</td>
+                <td>username: string</td>
+                <td>None</td>
+                <td>String message</td>
+            </tr>
+            <tr>
+                <td>/users/:username/:movieTitle</td>
+                <td>DELETE</td>
+                <td>Removes a movie from the user's favorite movies list</td>
+                <td>username: string, movieTitle: string</td>
+                <td>None</td>
+                <td>String message</td>
+            </tr>
+        </tbody>
     </table>
 
     <h2>Common HTTP Status Codes</h2>
