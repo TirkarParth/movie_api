@@ -32,9 +32,8 @@
             margin: 20px 0;
         }
         th, td {
-            padding: 10px;
             border: 1px solid #ddd;
-            text-align: left;
+            padding: 8px;
         }
         th {
             background-color: #f4f4f4;
@@ -98,30 +97,117 @@
 
     <h2>API Endpoints</h2>
     <table>
-        <thead>
-            <tr>
-                <th>Request</th>
-                <th>URL</th>
-                <th>Response</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>GET</td>
-                <td>http://localhost:8080/</td>
-                <td>Welcome message</td>
-            </tr>
-            <tr>
-                <td>GET</td>
-                <td>http://localhost:8080/movies</td>
-                <td>JSON object containing data about top 10 movies</td>
-            </tr>
-            <tr>
-                <td>GET</td>
-                <td>http://localhost:8080/documentation.html</td>
-                <td>Serves the documentation.html file</td>
-            </tr>
-        </tbody>
+        <tr>
+            <th>Request</th>
+            <th>URL</th>
+            <th>Response</th>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/movies</td>
+            <td>Returns a list of all movies in JSON format</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/movies/:title</td>
+            <td>Returns data about a single movie by title</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/movies/genre/:genreName</td>
+            <td>Returns data about a genre by name</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/movies/director/:directorName</td>
+            <td>Returns data about a director by name</td>
+        </tr>
+        <tr>
+            <td>GET</td>
+            <td>/users</td>
+            <td>Returns a list of all users in JSON format</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/users</td>
+            <td>Adds a new user and returns the newly created user object</td>
+        </tr>
+        <tr>
+            <td>POST</td>
+            <td>/users/:username/:movieTitle</td>
+            <td>Adds a movie to a user's list of favorite movies</td>
+        </tr>
+        <tr>
+            <td>PUT</td>
+            <td>/users/:username</td>
+            <td>Updates a user's information</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>/users/:username</td>
+            <td>Deletes a user by username</td>
+        </tr>
+        <tr>
+            <td>DELETE</td>
+            <td>/users/:username/:movieTitle</td>
+            <td>Removes a movie from a user's list of favorite movies</td>
+        </tr>
+    </table>
+
+    <h2>Common HTTP Status Codes</h2>
+    <table>
+        <tr>
+            <th>Status Code</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>OK: indicates a nonspecific success</td>
+        </tr>
+        <tr>
+            <td>201</td>
+            <td>Created: indicates successful creation of a resource</td>
+        </tr>
+        <tr>
+            <td>204</td>
+            <td>No Content: indicates that something has been intentionally left empty (for example, after deleting something)</td>
+        </tr>
+        <tr>
+            <td>301</td>
+            <td>Moved Permanently: redirects the user to another URL (useful if you change your page’s URL but keep the old one to redirect users who still have the previous URL)</td>
+        </tr>
+        <tr>
+            <td>302</td>
+            <td>Moved Temporarily: redirects the user to another URL (useful if your website is temporarily under construction)</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Bad Request: indicates a nonspecific failure with the request (for example, invalid data)</td>
+        </tr>
+        <tr>
+            <td>401</td>
+            <td>Unauthorized: indicates a problem with the client’s credentials</td>
+        </tr>
+        <tr>
+            <td>403</td>
+            <td>Forbidden: indicates that a resource is unavailable</td>
+        </tr>
+        <tr>
+            <td>404</td>
+            <td>Not Found: indicates that a resource couldn’t be found or the URL doesn’t exist</td>
+        </tr>
+        <tr>
+            <td>405</td>
+            <td>Method Not Allowed: indicates that a certain HTTP method isn’t allowed on a resource (for example, a URL only supports GET but not POST)</td>
+        </tr>
+        <tr>
+            <td>418</td>
+            <td>I’m a teapot: Yes, status 418 really does exist</td>
+        </tr>
+        <tr>
+            <td>500</td>
+            <td>Internal Server Error: indicates a nonspecific failure on the server</td>
+        </tr>
     </table>
 </body>
 </html>
