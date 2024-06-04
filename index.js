@@ -1,46 +1,52 @@
 const express = require('express');
-const app = express();
 const morgan = require('morgan');
+const path = require('path');
 
-const top10Movies = [
-    { title: 'Movie 1', year: 2022 },
-    { title: 'Movie 2', year: 2021 },
-    { title: 'Movie 3', year: 2022 },
-    { title: 'Movie 4', year: 2021 },
-    { title: 'Movie 5', year: 2022 },
-    { title: 'Movie 6', year: 2021 },
-    { title: 'Movie 7', year: 2022 },
-    { title: 'Movie 8', year: 2021 },
-    { title: 'Movie 9', year: 2022 },
-    { title: 'Movie 0', year: 2021 },
-    // Add more movie objects here
-    ];
+const app = express();
 
-// Serve static files from the public folder
-app.use(express.static('public'));
+// Use Morgan to log all requests
+app.use(morgan('common'));
 
-//This line instructs Express to use the "combined" format for logging requests. The "combined" format includes the IP address of the client, the date and time of the request, the HTTP method, the requested URL, the HTTP status code, the size of the response in bytes, and the referrer and user agent headers.
-app.use(morgan('combined'));
+// Serve static documentation.html file from the public folder
+app.use(express.static(path.join(__dirname, 'public')));
 
-
-app.get('/movies', (req, res) => {
-  res.json(top10Movies);
-});
-
+// Route for the root endpoint
 app.get('/', (req, res) => {
   res.send('Welcome to the Movie API!');
 });
 
-// Error-handling middleware function
+// Route for the /movies endpoint
+app.get('/movies', (req, res) => {
+  // Here you would typically fetch and return data about top 10 movies
+  res.json({
+    movies: [
+      { title: 'The Shawshank Redemption', year: 1994 },
+      { title: 'The Godfather', year: 1972 },
+      { title: 'The Dark Knight', year: 2008 },
+      { title: 'Pulp Fiction', year: 1994 },
+      { title: 'The Lord of the Rings: The Return of the King', year: 2003 },
+      { title: 'Forrest Gump', year: 1994 },
+      { title: 'Inception', year: 2010 },
+      { title: 'Fight Club', year: 1999 },
+      { title: 'The Matrix', year: 1999 },
+      { title: 'Goodfellas', year: 1990 }
+    ]
+  });
+});
+
+// Route for the /documentation endpoint
+app.get('/documentation', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
+});
+
+// Error-handling middleware
 app.use((err, req, res, next) => {
   console.error(err.stack);
   res.status(500).send('Something went wrong!');
 });
-      
-const PORT = 3000;
 
-app.listen(PORT, () => {
-  console.log(`Server is listening on port ${PORT}`);
+// Listen on port 8080
+const port = 8080;
+app.listen(port, () => {
+  console.log(`Server is running on port ${port}`);
 });
-
-  
