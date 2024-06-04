@@ -13,3 +13,17 @@ Timestamp: Mon Jun 03 2024 22:40:30 GMT+0200 (Central European Summer Time)
 URL: /index
 Timestamp: Mon Jun 03 2024 22:48:51 GMT+0200 (Central European Summer Time)
 
+::1 - - [04/Jun/2024:17:10:48 +0000] "GET /documentation HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+::1 - - [04/Jun/2024:17:12:06 +0000] "GET /movies HTTP/1.1" 200 444 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+::1 - - [04/Jun/2024:17:12:47 +0000] "GET /inception HTTP/1.1" 404 148 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+::1 - - [04/Jun/2024:17:13:32 +0000] "GET /users/john_doe/Inception HTTP/1.1" 404 163 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/125.0.0.0 Safari/537.36"
+::1 - - [04/Jun/2024:17:20:10 +0000] "GET /movies HTTP/1.1" 200 444 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:28:07 +0000] "GET /users/john_doe/Inception HTTP/1.1" 404 163 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:29:16 +0000] "GET /movies/genre/Drama HTTP/1.1" 404 15 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:29:36 +0000] "GET /movies/Inception HTTP/1.1" 200 226 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:30:27 +0000] "GET /movies HTTP/1.1" 200 444 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:31:20 +0000] "GET /movies/Inception HTTP/1.1" 200 226 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:31:46 +0000] "GET /movies/director/Nolan HTTP/1.1" 404 18 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:32:37 +0000] "GET /movies/director/Christopher%20Nolan HTTP/1.1" 200 63 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:33:04 +0000] "GET /users HTTP/1.1" 200 112 "-" "PostmanRuntime/7.39.0"
+::1 - - [04/Jun/2024:17:33:35 +0000] "GET /users/john_doe/Inception HTTP/1.1" 404 163 "-" "PostmanRuntime/7.39.0"
