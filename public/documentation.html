@@ -114,7 +114,30 @@
                 <td>Returns data on all movies</td>
                 <td>None</td>
                 <td>None</td>
-                <td>JSON array of movie objects</td>
+                <td>
+<pre class="code-block">
+[
+  {
+    "_id": "60c72b2f9b1d8b1234567890",
+    "Title": "Inception",
+    "Description": "A thief who steals corporate secrets through the use of dream-sharing technology...",
+    "Genre": {
+      "Name": "Sci-Fi",
+      "Description": "Science fiction is a genre of speculative fiction that typically deals..."
+    },
+    "Director": {
+      "Name": "Christopher Nolan",
+      "Bio": "Christopher Nolan is a British-American film director, producer, and screenwriter.",
+      "Birth": "1970",
+      "Death": null
+    },
+    "ImagePath": "inception.png",
+    "Featured": true
+  },
+  ...
+]
+</pre>
+                </td>
             </tr>
             <tr>
                 <td>/movies/:title</td>
@@ -122,7 +145,27 @@
                 <td>Returns data on a single movie by title</td>
                 <td>title: string</td>
                 <td>None</td>
-                <td>JSON object of the movie</td>
+                <td>
+<pre class="code-block">
+{
+  "_id": "60c72b2f9b1d8b1234567890",
+  "Title": "Inception",
+  "Description": "A thief who steals corporate secrets through the use of dream-sharing technology...",
+  "Genre": {
+    "Name": "Sci-Fi",
+    "Description": "Science fiction is a genre of speculative fiction that typically deals..."
+  },
+  "Director": {
+    "Name": "Christopher Nolan",
+    "Bio": "Christopher Nolan is a British-American film director, producer, and screenwriter.",
+    "Birth": "1970",
+    "Death": null
+  },
+  "ImagePath": "inception.png",
+  "Featured": true
+}
+</pre>
+                </td>
             </tr>
             <tr>
                 <td>/movies/genre/:genreName</td>
@@ -130,7 +173,14 @@
                 <td>Returns data on a genre by name</td>
                 <td>genreName: string</td>
                 <td>None</td>
-                <td>JSON object of the genre</td>
+                <td>
+<pre class="code-block">
+{
+  "Name": "Sci-Fi",
+  "Description": "Science fiction is a genre of speculative fiction that typically deals..."
+}
+</pre>
+                </td>
             </tr>
             <tr>
                 <td>/movies/director/:directorName</td>
@@ -138,55 +188,118 @@
                 <td>Returns data on a director by name</td>
                 <td>directorName: string</td>
                 <td>None</td>
-                <td>JSON object of the director</td>
-            </tr>
-            <tr>
-                <td>/users</td>
-                <td>GET</td>
-                <td>Returns data on all users</td>
-                <td>None</td>
-                <td>None</td>
-                <td>JSON array of user objects</td>
+                <td>
+<pre class="code-block">
+{
+  "Name": "Christopher Nolan",
+  "Bio": "Christopher Nolan is a British-American film director, producer, and screenwriter.",
+  "Birth": "1970",
+  "Death": null
+}
+</pre>
+                </td>
             </tr>
             <tr>
                 <td>/users</td>
                 <td>POST</td>
-                <td>Adds a new user</td>
+                <td>Registers a new user</td>
                 <td>None</td>
-                <td>JSON object with user data<br>Example:<br>{ "username": "user1", "email": "user1@example.com", "password": "password123" }</td>
-                <td>JSON object of the created user</td>
+                <td>
+<pre class="code-block">
+{
+  "Username": "newuser",
+  "Password": "password",
+  "Email": "newuser@example.com",
+  "Birthday": "1990-01-01"
+}
+</pre>
+                </td>
+                <td>
+<pre class="code-block">
+{
+  "_id": "60c72b2f9b1d8b1234567890",
+  "Username": "newuser",
+  "Password": "password",
+  "Email": "newuser@example.com",
+  "Birthday": "1990-01-01",
+  "FavoriteMovies": []
+}
+</pre>
+                </td>
             </tr>
             <tr>
-                <td>/users/:username/:movieTitle</td>
-                <td>POST</td>
-                <td>Adds a movie to the user's favorite movies list</td>
-                <td>username: string, movieTitle: string</td>
-                <td>None</td>
-                <td>String message</td>
-            </tr>
-            <tr>
-                <td>/users/:username</td>
+                <td>/users/:Username</td>
                 <td>PUT</td>
                 <td>Updates user data</td>
-                <td>username: string</td>
-                <td>JSON object with updated user data<br>Example:<br>{ "username": "newUsername", "email": "newEmail@example.com", "password": "newPassword123" }</td>
-                <td>String message</td>
+                <td>Username: string</td>
+                <td>
+<pre class="code-block">
+{
+  "Username": "updateduser",
+  "Password": "newpassword",
+  "Email": "updateduser@example.com",
+  "Birthday": "1991-01-01"
+}
+</pre>
+                </td>
+                <td>
+<pre class="code-block">
+{
+  "_id": "60c72b2f9b1d8b1234567890",
+  "Username": "updateduser",
+  "Password": "newpassword",
+  "Email": "updateduser@example.com",
+  "Birthday": "1991-01-01",
+  "FavoriteMovies": []
+}
+</pre>
+                </td>
             </tr>
             <tr>
-                <td>/users/:username</td>
-                <td>DELETE</td>
-                <td>Deletes a user</td>
-                <td>username: string</td>
+                <td>/users/:Username/movies/:MovieID</td>
+                <td>PATCH</td>
+                <td>Adds a movie to the user's favorite movies list</td>
+                <td>Username: string, MovieID: string</td>
                 <td>None</td>
-                <td>String message</td>
+                <td>
+<pre class="code-block">
+{
+  "_id": "60c72b2f9b1d8b1234567890",
+  "Username": "user",
+  "FavoriteMovies": ["60c72b2f9b1d8b1234567890"]
+}
+</pre>
+                </td>
             </tr>
             <tr>
-                <td>/users/:username/:movieTitle</td>
+                <td>/users/:Username/movies/:MovieID</td>
                 <td>DELETE</td>
                 <td>Removes a movie from the user's favorite movies list</td>
-                <td>username: string, movieTitle: string</td>
+                <td>Username: string, MovieID: string</td>
                 <td>None</td>
-                <td>String message</td>
+                <td>
+<pre class="code-block">
+{
+  "_id": "60c72b2f9b1d8b1234567890",
+  "Username": "user",
+  "FavoriteMovies": []
+}
+</pre>
+                </td>
+            </tr>
+            <tr>
+                <td>/users/:Username</td>
+                <td>DELETE</td>
+                <td>Deletes a user</td>
+                <td>Username: string</td>
+                <td>None</td>
+                <td>
+<pre class="code-block">
+{
+  "message": "User was deleted."
+}
+</pre>
+                </td>
             </tr>
         </tbody>
     </table>
