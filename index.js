@@ -4,219 +4,289 @@ const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const auth = require('./auth.js');
 
 const app = express();
+const port = process.env.PORT || 8080;
 
 const Movies = Models.Movie;
 const Users = Models.User;
 
-mongoose.connect('mongodb://localhost:27017/cfDB', { useNewUrlParser: true, useUnifiedTopology: true });
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/cfDB', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+});
 
+// Middleware
 app.use(bodyParser.json());
-// app.use(morgan('combined'));
+app.use(morgan('common'));
 
-//CREATE
-//Add a user
-app.post('/users', async (req, res) => {
-    await Users.findOne({ Username: req.body.Username })
-        .then((user) => {
-            if (user) {
-                return res.status(400).send(req.body.Username + ' already exists');
-            } else {
-                Users
-                    .create({
-                        Username: req.body.Username,
-                        Password: req.body.Password,
-                        Email: req.body.Email,
-                        Birthday: req.body.Birthday
-                    })
-                    .then((user) => { res.status(201).json(user) })
-                    .catch((error) => {
-                        console.error(error);
-                        res.status(500).send('Error: ' + error);
-                    })
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-        });
-});
+// Initialize auth module
+auth(app); // Ensure auth module sets up passport middleware correctly
 
-// UPDATE
-// A user's info, by username
-app.put('/users/:Username', async (req, res) => {
-    await Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $set:
-        {
-            Username: req.body.Username,
-            Password: req.body.Password,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-        }
-    },
-        { new: true }) // This line makes sure that the updated document is returned
-        .then((updatedUser) => {
-            res.json(updatedUser);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        })
+// Middleware to secure API with JWT
+const passport = require('passport');
+const jwtAuth = passport.authenticate('jwt', { session: false });
 
-});
-
-// UPDATE
-// Add a movie to a user's list of favorites
-app.patch('/users/:Username/movies/:MovieID', async (req, res) => {
-    await Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $push: { FavoriteMovies: req.params.MovieID }
-    },
-        { new: true }) // This line makes sure that the updated document is returned
-        .then((updatedUser) => {
-            res.json(updatedUser);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
-});
-
-// DELETE
-// Delete a movie from a user's list of favorites
-app.delete('/users/:Username/movies/:MovieID', async (req, res) => {
-    await Users.findOneAndUpdate({ Username: req.params.Username }, {
-        $pull: { FavoriteMovies: req.params.MovieID }
-    },
-        { new: true }) // This line makes sure that the updated document is returned
-        .then((updatedUser) => {
-            res.json(updatedUser);
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
-});
-
-// DELETE
-// Delete a user by username
-app.delete('/users/:Username', async (req, res) => {
-    await Users.findOneAndDelete({ Username: req.params.Username })
-        .then((user) => {
-            if (!user) {
-                res.status(404).send(req.params.Username + ' was not found');
-            } else {
-                res.status(200).send(req.params.Username + ' was deleted.');
-            }
-        })
-        .catch((err) => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
-});
-
-// READ
+// Welcome message
 app.get('/', (req, res) => {
     res.send('Welcome to myFlix!');
 });
 
-// READ
-app.get('/movies', async (req, res) => {
-    await Movies.find()
-        .then((movies) => {
-            res.status(201).json(movies);
+// Movies endpoints
+
+// GET all movies (requires JWT authentication)
+app.get('/movies', jwtAuth, (req, res) => {
+    Movies.find()
+        .then(movies => {
+            res.status(200).json(movies);
         })
-        .catch((err) => {
+        .catch(err => {
             console.error(err);
             res.status(500).send('Error: ' + err);
         });
 });
 
-// READ
-app.get('/movies/:title', async (req, res) => {
+// GET a movie by title (requires JWT authentication)
+app.get('/movies/:title', jwtAuth, (req, res) => {
     const title = req.params.title;
-    const movie = await Movies.findOne({ Title: title });
-
-    if (movie) {
-        res.status(200).json(movie);
-    } else {
-        res.status(404).send('Movie not found');
-    }
-});
-
-// READ
-app.get('/movies/genre/:genreName', async (req, res) => {
-    try {
-        const genreName = req.params.genreName;
-        const movie = await Movies.findOne({ 'Genre.Name': genreName });
-
-        if (movie && movie.Genre && movie.Genre.Description) {
-            res.status(200).json({ Description: movie.Genre.Description });
-        } else {
-            res.status(404).send('No such genre found');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    }
-});
-
-// READ
-app.get('/movies/directors/:directorName', async (req, res) => {
-    try {
-        const directorName = req.params.directorName;
-        const movie = await Movies.findOne({ 'Director.Name': directorName });
-
-        if (movie && movie.Director) {
-            res.status(200).json({
-                Name: movie.Director.Name,
-                Bio: movie.Director.Bio,
-                Birth: movie.Director.Birth,
-                Death: movie.Director.Death
-            });
-        } else {
-            res.status(404).send('No such director');
-        }
-    } catch (err) {
-        console.error(err);
-        res.status(500).send('Error: ' + err);
-    }
-});
-
-//READ
-app.get('/users', async (req, res) => {
-    await Users.find()
-        .then((users) => {
-            res.status(201).json(users);
+    Movies.findOne({ Title: title })
+        .then(movie => {
+            if (movie) {
+                res.status(200).json(movie);
+            } else {
+                res.status(404).send('Movie not found');
+            }
         })
-        .catch((err) => {
+        .catch(err => {
             console.error(err);
             res.status(500).send('Error: ' + err);
         });
 });
 
-//READ
-app.get('/users/:Username', async (req, res) => {
-    await Users.findOne({ Username: req.params.Username })
-        .then((user) => {
-            res.json(user);
+// GET movies by genre name (requires JWT authentication)
+app.get('/movies/genre/:genreName', jwtAuth, (req, res) => {
+    const genreName = req.params.genreName;
+    Movies.find({ 'Genre.Name': genreName })
+        .then(movies => {
+            if (movies.length > 0) {
+                res.status(200).json(movies);
+            } else {
+                res.status(404).send('Genre not found');
+            }
         })
-        .catch((err) => {
+        .catch(err => {
             console.error(err);
             res.status(500).send('Error: ' + err);
         });
 });
 
-// Middleware for serving static files from the public directory
+// GET movies by director name (requires JWT authentication)
+app.get('/movies/directors/:directorName', jwtAuth, (req, res) => {
+    const directorName = req.params.directorName;
+    Movies.find({ 'Director.Name': directorName })
+        .then(movies => {
+            if (movies.length > 0) {
+                res.status(200).json(movies);
+            } else {
+                res.status(404).send('Director not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// POST a new movie (requires JWT authentication)
+app.post('/movies', jwtAuth, (req, res) => {
+    Movies.create(req.body)
+        .then(movie => {
+            res.status(201).json(movie);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// PUT/update a movie by ID (requires JWT authentication)
+app.put('/movies/:movieId', jwtAuth, (req, res) => {
+    const movieId = req.params.movieId;
+    Movies.findByIdAndUpdate(movieId, req.body, { new: true })
+        .then(movie => {
+            if (movie) {
+                res.status(200).json(movie);
+            } else {
+                res.status(404).send('Movie not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// DELETE a movie by ID (requires JWT authentication)
+app.delete('/movies/:movieId', jwtAuth, (req, res) => {
+    const movieId = req.params.movieId;
+    Movies.findByIdAndRemove(movieId)
+        .then(movie => {
+            if (movie) {
+                res.status(200).send('Movie deleted successfully');
+            } else {
+                res.status(404).send('Movie not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// Users endpoints
+
+// GET all users (requires JWT authentication)
+app.get('/users', jwtAuth, (req, res) => {
+    Users.find()
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// GET a user by username (requires JWT authentication)
+app.get('/users/:Username', jwtAuth, (req, res) => {
+    const username = req.params.Username;
+    Users.findOne({ Username: username })
+        .then(user => {
+            if (user) {
+                res.status(200).json(user);
+            } else {
+                res.status(404).send('User not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// POST a new user (registration)
+app.post('/users', (req, res) => {
+    Users.findOne({ Username: req.body.Username })
+        .then(user => {
+            if (user) {
+                return res.status(400).send(req.body.Username + ' already exists');
+            } else {
+                Users.create(req.body)
+                    .then(newUser => {
+                        res.status(201).json(newUser);
+                    })
+                    .catch(err => {
+                        console.error(err);
+                        res.status(500).send('Error: ' + err);
+                    });
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// PUT/update user information by username (requires JWT authentication)
+app.put('/users/:Username', jwtAuth, (req, res) => {
+    const username = req.params.Username;
+    Users.findOneAndUpdate({ Username: username }, req.body, { new: true })
+        .then(user => {
+            if (user) {
+                res.status(200).json(user);
+            } else {
+                res.status(404).send('User not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// DELETE a user by username (requires JWT authentication)
+app.delete('/users/:Username', jwtAuth, (req, res) => {
+    const username = req.params.Username;
+    Users.findOneAndDelete({ Username: username })
+        .then(user => {
+            if (user) {
+                res.status(200).send(username + ' was deleted');
+            } else {
+                res.status(404).send('User not found');
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            res.status(500).send('Error: ' + err);
+        });
+});
+
+// POST a movie to a user's list of favorites (requires JWT authentication)
+app.post('/users/:Username/favorites/:MovieID', jwtAuth, (req, res) => {
+    const username = req.params.Username;
+    const movieID = req.params.MovieID;
+
+    Users.findOneAndUpdate(
+        { Username: username },
+        { $addToSet: { FavoriteMovies: movieID } },
+        { new: true }
+    )
+    .then(user => {
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).json(user.FavoriteMovies);
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+// DELETE a movie from a user's list of favorites (requires JWT authentication)
+app.delete('/users/:Username/favorites/:MovieID', jwtAuth, (req, res) => {
+    const username = req.params.Username;
+    const movieID = req.params.MovieID;
+
+    Users.findOneAndUpdate(
+        { Username: username },
+        { $pull: { FavoriteMovies: movieID } },
+        { new: true }
+    )
+    .then(user => {
+        if (!user) {
+            return res.status(404).send('User not found');
+        }
+        res.status(200).json(user.FavoriteMovies);
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
+});
+
+// Serve static files from the 'public' directory
 app.use(express.static('public'));
 
-// Error-handling middleware called when an error occurs
+// Error-handling middleware
 app.use((err, req, res, next) => {
     console.error(err.stack);
     res.status(500).send('Something broke!');
 });
 
-// Start the server and listen for requests on port 8080
-app.listen(8080, () => {
-    console.log('Your app is listening on port 8080.');
+// Start the server
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`);
 });
