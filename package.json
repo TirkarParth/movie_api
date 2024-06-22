@@ -1,5 +1,6 @@
 {
-  "name": "movie_api",
+    "start": "node index.js"
+    "name": "movie_api",
   "version": "1.0.0",
   "description": "This project implements a basic Movie API server using Node.js. The server listens for incoming requests and serves different HTML files based on the requested URL. Additionally, it logs all requests along with timestamps to a log file.",
   "main": "index.js",
@@ -10,8 +11,10 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
+    "cors": "^2.8.5",
     "express": "^4.19.2",
     "fs": "^0.0.1-security",
     "jsonwebtoken": "^9.0.2",

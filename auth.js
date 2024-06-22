@@ -2,6 +2,8 @@ const jwtSecret = 'your_jwt_secret';
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const { User } = require('./models.js');
+const cors = require('cors');
+app.use(cors());
 
 require('./passport');
 

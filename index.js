@@ -7,7 +7,7 @@ const Models = require('./models.js');
 const auth = require('./auth.js');
 
 const app = express();
-const port = process.env.PORT || 8080;
+//const port = process.env.PORT || 8080;
 
 const Movies = Models.Movie;
 const Users = Models.User;
@@ -286,7 +286,8 @@ app.use((err, req, res, next) => {
     res.status(500).send('Something broke!');
 });
 
-// Start the server
-app.listen(port, () => {
-    console.log(`Server is running on port ${port}`);
+// Configuring the port to be dynamic or default to 8080
+const port = process.env.PORT || 8080;
+app.listen(port, '0.0.0.0', () => {
+    console.log('Listening on Port ' + port);
 });
