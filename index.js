@@ -4,6 +4,8 @@ const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
+const cors = require('cors');
+app.use(cors());
 const auth = require('./auth.js');
 
 const app = express();
