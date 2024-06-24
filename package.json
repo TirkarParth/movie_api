@@ -1,31 +1,32 @@
 {
-    "start": "node index.js"
+    "start": "node index.js",
     "name": "movie_api",
-  "version": "1.0.0",
-  "description": "This project implements a basic Movie API server using Node.js. The server listens for incoming requests and serves different HTML files based on the requested URL. Additionally, it logs all requests along with timestamps to a log file.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "bcrypt": "^5.1.1",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
-    "cors": "^2.8.5",
-    "express": "^4.19.2",
-    "fs": "^0.0.1-security",
-    "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.4.3",
-    "morgan": "^1.10.0",
-    "nodeman": "^1.1.2",
-    "passport": "^0.7.0",
-    "passport-http": "^0.3.0",
-    "passport-jwt": "^4.0.1",
-    "passport-local": "^1.0.0",
-    "path": "^0.12.7",
-    "uuid": "^9.0.1"
-  }
+    "version": "1.0.0",
+    "description": "This project implements a basic Movie API server using Node.js. The server listens for incoming requests and serves different HTML files based on the requested URL. Additionally, it logs all requests along with timestamps to a log file.",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "bcrypt": "^5.1.1",
+        "bcryptjs": "^2.4.3",
+        "body-parser": "^1.20.2",
+        "cors": "^2.8.5",
+        "express": "^4.19.2",
+        "express-validator": "^7.1.0",
+        "fs": "^0.0.1-security",
+        "jsonwebtoken": "^9.0.2",
+        "mongoose": "^8.4.3",
+        "morgan": "^1.10.0",
+        "nodeman": "^1.1.2",
+        "passport": "^0.7.0",
+        "passport-http": "^0.3.0",
+        "passport-jwt": "^4.0.1",
+        "passport-local": "^1.0.0",
+        "path": "^0.12.7",
+        "uuid": "^9.0.1"
+    }
 }
