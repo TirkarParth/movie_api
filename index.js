@@ -4,13 +4,12 @@ const uuid = require('uuid');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Models = require('./models.js');
-const cors = require('cors');
-app.use(cors());
+const passport = require('passport');
 const auth = require('./auth.js');
+const cors = require('cors');
+const { check, validationResult } = require('express-validator');
 
 const app = express();
-//const port = process.env.PORT || 8080;
-
 const Movies = Models.Movie;
 const Users = Models.User;
 
@@ -22,13 +21,19 @@ mongoose.connect('mongodb://localhost:27017/cfDB', {
 
 // Middleware
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(morgan('common'));
+
+// Implement CORS to allow all domains
+app.use(cors());
+
+// Your Passport strategy initialization and other middlewares
+require('./passport');
 
 // Initialize auth module
 auth(app); // Ensure auth module sets up passport middleware correctly
 
 // Middleware to secure API with JWT
-const passport = require('passport');
 const jwtAuth = passport.authenticate('jwt', { session: false });
 
 // Welcome message
@@ -179,20 +184,36 @@ app.get('/users/:Username', jwtAuth, (req, res) => {
 });
 
 // POST a new user (registration)
-app.post('/users', (req, res) => {
+app.post('/users', [
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.Password);
     Users.findOne({ Username: req.body.Username })
         .then(user => {
             if (user) {
                 return res.status(400).send(req.body.Username + ' already exists');
             } else {
-                Users.create(req.body)
-                    .then(newUser => {
-                        res.status(201).json(newUser);
-                    })
-                    .catch(err => {
-                        console.error(err);
-                        res.status(500).send('Error: ' + err);
-                    });
+                Users.create({
+                    Username: req.body.Username,
+                    Password: hashedPassword,
+                    Email: req.body.Email,
+                    Birthday: req.body.Birthday
+                })
+                .then(newUser => {
+                    res.status(201).json(newUser);
+                })
+                .catch(err => {
+                    console.error(err);
+                    res.status(500).send('Error: ' + err);
+                });
             }
         })
         .catch(err => {
@@ -202,20 +223,40 @@ app.post('/users', (req, res) => {
 });
 
 // PUT/update user information by username (requires JWT authentication)
-app.put('/users/:Username', jwtAuth, (req, res) => {
+app.put('/users/:Username', [
+    jwtAuth,
+    check('Username', 'Username is required').isLength({ min: 5 }),
+    check('Username', 'Username contains non-alphanumeric characters - not allowed.').isAlphanumeric(),
+    check('Password', 'Password is required').not().isEmpty(),
+    check('Email', 'Email does not appear to be valid').isEmail()
+], (req, res) => {
+    let errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
+
+    let hashedPassword = Users.hashPassword(req.body.Password);
     const username = req.params.Username;
-    Users.findOneAndUpdate({ Username: username }, req.body, { new: true })
-        .then(user => {
-            if (user) {
-                res.status(200).json(user);
-            } else {
-                res.status(404).send('User not found');
-            }
-        })
-        .catch(err => {
-            console.error(err);
-            res.status(500).send('Error: ' + err);
-        });
+    Users.findOneAndUpdate({ Username: username }, 
+        {
+            Username: req.body.Username,
+            Password: hashedPassword,
+            Email: req.body.Email,
+            Birthday: req.body.Birthday
+        },
+        { new: true }
+    )
+    .then(user => {
+        if (user) {
+            res.status(200).json(user);
+        } else {
+            res.status(404).send('User not found');
+        }
+    })
+    .catch(err => {
+        console.error(err);
+        res.status(500).send('Error: ' + err);
+    });
 });
 
 // DELETE a user by username (requires JWT authentication)
@@ -281,12 +322,6 @@ app.delete('/users/:Username/favorites/:MovieID', jwtAuth, (req, res) => {
 
 // Serve static files from the 'public' directory
 app.use(express.static('public'));
-
-// Error-handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
 
 // Configuring the port to be dynamic or default to 8080
 const port = process.env.PORT || 8080;
