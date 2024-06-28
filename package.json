@@ -5,7 +5,8 @@
     "description": "This project implements a basic Movie API server using Node.js. The server listens for incoming requests and serves different HTML files based on the requested URL. Additionally, it logs all requests along with timestamps to a log file.",
     "main": "index.js",
     "scripts": {
-        "test": "echo \"Error: no test specified\" && exit 1"
+        "start": "node index.js"
+        
     },
     "keywords": [],
     "author": "",
