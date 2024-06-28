@@ -25,9 +25,11 @@ passport.use(
                     }
 
                     // Use the validatePassword method
-                    if (!user.validatePassword(password)) {
+                    if (!await user.validatePassword(password)) {
                         console.log('incorrect password');
-                        return callback(null, false, { message: 'Incorrect password.' });
+                        return callback(null, false, {
+                            message: 'Incorrect username or password.',
+                        });
                     }
 
                     console.log('finished');
