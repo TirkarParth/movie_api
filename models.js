@@ -37,6 +37,10 @@ userSchema.pre('save', async function(next) {
     next();
 });
 
+userSchema.statics.hashPassword = (password) => {
+    return bcrypt.hashSync(password, 10);
+  };
+
 // Method to validate password
 userSchema.methods.validatePassword = async function(password) {
     return await bcrypt.compare(password, this.Password);
