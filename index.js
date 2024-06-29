@@ -15,12 +15,12 @@ const Movies = Models.Movie;
 const Users = Models.User;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://localhost:27017/cfDB', {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-});
+// mongoose.connect('mongodb://localhost:27017/cfDB', {
+//     useNewUrlParser: true,
+//     useUnifiedTopology: true,
+// });
 
-// mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 // Middleware
 app.use(bodyParser.json());
@@ -38,6 +38,15 @@ auth(app); // Ensure auth module sets up passport middleware correctly
 
 // Middleware to secure API with JWT
 const jwtAuth = passport.authenticate('jwt', { session: false });
+
+// Add error handling middleware for JSON parsing
+app.use((err, req, res, next) => {
+    if (err instanceof SyntaxError && err.status === 400 && 'body' in err) {
+        console.error('Bad JSON');
+        return res.status(400).send({ status: 400, message: 'Bad JSON' });
+    }
+    next();
+});
 
 // Welcome message
 app.get('/', (req, res) => {
