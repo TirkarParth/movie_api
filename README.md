@@ -1,38 +1,82 @@
- # Movie API Project
+# myMovie API
 
-This project implements a basic Movie API server using Node.js. The server listens for incoming requests and serves different HTML files based on the requested URL. Additionally, it logs all requests along with timestamps to a log file.
+myMovie is a RESTful API for a movie database application, built using Node.js, Express, MongoDB, and Mongoose. It allows users to access movie information, manage user profiles, authenticate securely, and interact with data through CRUD operations.
 
-## Getting Started
+## Features
+- Return a list of all movies
+- Retrieve movie details by title
+- Retrieve genre information by name
+- Retrieve director information by name
+- User registration and authentication with JWT
+- Add/remove movies from favorites
+- Update user profile information
+- Delete user accounts
 
-### Prerequisites
+## Technologies Used
+- Node.js
+- Express
+- MongoDB & Mongoose
+- Passport (Local and JWT strategies)
+- CORS
+- Bcrypt for password hashing
+- Postman for API testing
+- Heroku for deployment
 
-Make sure you have Node.js installed on your machine.
+## Prerequisites
+Ensure you have the following installed:
+- Node.js
+- MongoDB (local or MongoDB Atlas)
 
-### Installation
+## Setup Instructions
+1. Clone the repository:
+```bash
+git clone https://github.com/your-username/myflix-api.git
+cd myflix-api
+```
 
-1. Clone this repository to your local machine.
+2. Install dependencies:
+```bash
+npm install
+```
 
-2. Navigate to the project directory:
-   ```bash
-   cd movie_api
-3. Install dependencies: 
-   ```bash
-   npm install
+3. Configure environment variables:
+- Create a `.env` file in the root directory with:
+```
+DB_URI=YOUR_MONGODB_URI
+SECRET_KEY=YOUR_SECRET_KEY
+```
 
+4. Start the server:
+```bash
+npm start
+```
 
-Usage
-To start the server, run the following command: 
-   ```bash
-   node server.js
+## Endpoints
+### Movies
+- `GET /movies` - Returns all movies
+- `GET /movies/:title` - Returns movie details by title
+- `GET /genres/:name` - Returns genre details
+- `GET /directors/:name` - Returns director details
 
-The server will start listening on port 8080. You can access the API endpoints by visiting http://localhost:8080.
+### Users
+- `POST /users` - Register a new user
+- `POST /login` - User login (JWT token)
+- `PUT /users/:username` - Update user details
+- `DELETE /users/:username` - Delete user
+- `POST /users/:username/movies/:movieId` - Add movie to favorites
+- `DELETE /users/:username/movies/:movieId` - Remove movie from favorites
 
-Files and Directories
+## Authentication & Authorization
+- JWT authentication with Passport
+- Secure routes using JWT strategy, except user registration
 
-server.js: Contains the main server code.
-index.html: HTML file served for requests not containing "documentation" in the URL.
-documentation.html: HTML file served for requests containing "documentation" in the URL.
-log.txt: Log file containing request URLs and timestamps.
-Contributing
+## Data Validation & Security
+- Input validation using Mongoose schemas
+- Password hashing with Bcrypt
 
-Contributions are welcome! Please feel free to submit pull requests or open issues.
+## Deployment
+- Hosted on Heroku, database on MongoDB Atlas
+
+## Testing
+Test API endpoints using Postman or similar tools.
+
